@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Banking System</title>
+</head>
+<body>
+
+<h2>Transaction</h2>
+
+<form id="txnForm">
+    Account ID: <input type="number" id="account_id"><br><br>
+    Type:
+    <select id="type">
+        <option value="DEPOSIT">Deposit</option>
+        <option value="WITHDRAW">Withdraw</option>
+    </select><br><br>
+    Amount: <input type="number" id="amount"><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+
+<hr>
+
+<h2>Fraud Alerts</h2>
+<button onclick="getFraud()">Check Fraud</button>
+
+<pre id="fraudResult"></pre>
+
+<script>
+document.getElementById("txnForm").onsubmit = async function(e) {
+    e.preventDefault();
+
+    const data = {
+        account_id: document.getElementById("account_id").value,
+        type: document.getElementById("type").value,
+        amount: document.getElementById("amount").value
+    };
+
+    await fetch('/transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+
+    alert("Transaction Done");
+};
+
+async function getFraud() {
+    const res = await fetch('/fraud-alerts');
+    const data = await res.json();
+
+    document.getElementById("fraudResult").innerText =
+        JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
